@@ -62,7 +62,8 @@ class ViewController: UIViewController {
     func moveRight(r: UISwipeGestureRecognizer!){
         var except:[Int] = []
         var terminal = [3, 7, 11, 15]
-        for (i, score) in enumerate(tiles) {
+        for i in reverse(0...15) {
+            var score = tiles[i]
             if score == 0 {
                 continue
             }
@@ -72,7 +73,7 @@ class ViewController: UIViewController {
                 var next = i;
                 while true{
                     next++;
-                    if next < 16 && !contains(terminal, next-1){
+                    if next >= 0 && next < 16 && !contains(terminal, next-1){
                         if tiles[next] == 0{
                             moveTile(next-1, nextTile: next)
                         } else if tiles[next-1] == tiles[next] && !contains(except, next-1){
@@ -103,7 +104,7 @@ class ViewController: UIViewController {
         
         var except:[Int] = []
         var terminal = [0, 4, 8, 12]
-        for i in reverse(0...15) {
+        for i in (0...15) {
             var score = tiles[i]
             if score == 0 {
                 continue

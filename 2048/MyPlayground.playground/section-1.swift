@@ -24,7 +24,9 @@ for (i, score) in enumerate(reverse(tiles)){
     println(i)
     
 }
-
+for i in (0...15){
+    println(i)
+}
 reverse(0...15)
 
 func s() -> Bool{
