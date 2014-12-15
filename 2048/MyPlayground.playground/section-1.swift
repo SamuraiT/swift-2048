@@ -34,3 +34,6 @@ func s() -> Bool{
 }
 
 s()
+
+Array(0...15)
+

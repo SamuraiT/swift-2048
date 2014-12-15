@@ -57,7 +57,9 @@ class ViewController: UIViewController {
             generateTile()
         }
     }
+ 
    
+    
     @objc(right:)
     func moveRight(r: UISwipeGestureRecognizer!){
         var except:[Int] = []
@@ -200,8 +202,46 @@ class ViewController: UIViewController {
     
     @objc(down:)
     func moveDown(r: UISwipeGestureRecognizer!){
-       println("down")
+        var except:[Int] = []
+        var terminal = [12, 13, 14, 15]
+        for i in reverse(0...15) {
+            var score = tiles[i]
+            if score == 0 {
+                continue
+            }
+            if contains(terminal, i){
+                //dont move. stay
+            } else {
+                var next = i;
+                while true{
+                    next += 4
+                    var prev = next - 4
+                    if next >= 0 && next < 16 && !contains(terminal, prev){
+                        if tiles[next] == 0{
+                            moveTile(prev, nextTile: next)
+                        } else if tiles[prev] == tiles[next] && !contains(except, prev){
+                            multipleTile(prev, nextTile: next)
+                            except.append(next)
+                            TotalScore += tiles[next]
+                            TotalScoreLabel.text = "Score: \(TotalScore)"
+                            break
+                        }
+                    } else {
+                        println("break \(next)")
+                        break
+                    }
+                    
+                }
+            }
+            
+        }
+        usleep(9000)
+        generateTile()
+        if isGameOver(){
+            gameStateLabel.hidden = false
+        }
     }
+    
     
     @objc(up:)
     func moveUp(r: UISwipeGestureRecognizer!){
@@ -212,6 +252,63 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+   
+    func calcNextIndex(isRighSide: Bool, next: Int) -> Int{
+        if isRighSide{
+            return next + 1
+        } else {
+            return next - 1
+        }
+    }
     
+    func moveSide(isRightSide: Bool, terminal : [Int]){
+        /*
+        generaized version of side move
+        */
+        var except:[Int] = []
+        var traverseOrder : [Int] = []
+        if isRightSide{
+            traverseOrder = reverse(0...15)
+        } else {
+            traverseOrder = Array(0...15)
+        }
+        for i in traverseOrder {
+            var score = tiles[i]
+            if score == 0 {
+                continue
+            }
+            if contains(terminal, i){
+                //dont move. stay
+            } else {
+                var next = i;
+                var prev = 0
+                prev = calcNextIndex(!isRightSide, next: next)
+                while true{
+                    next = calcNextIndex(isRightSide, next: next);
+                    if next >= 0 && next < 16 && !contains(terminal, prev){
+                        if tiles[next] == 0{
+                            moveTile(prev, nextTile: next)
+                        } else if tiles[prev] == tiles[next] && !contains(except, prev){
+                            multipleTile(prev, nextTile: next)
+                            except.append(next)
+                            TotalScore += tiles[next]
+                            TotalScoreLabel.text = "Score: \(TotalScore)"
+                            break
+                        }
+                    } else {
+                        println("break \(next)")
+                        break
+                    }
+                    
+                }
+            }
+            
+        }
+        usleep(9000)
+        generateTile()
+        if isGameOver(){
+            gameStateLabel.hidden = false
+        }
+    }
 }
 
