@@ -15,15 +15,16 @@ class ViewController: UIViewController {
                 0, 0, 0, 0,
                 0, 0, 0, 0]
     var modifiedTils: [Int] = []
+    @IBAction func startNewGame(sender: AnyObject) {
+        initializeGame()
+    }
     @IBOutlet weak var gameStateLabel: UILabel!
     var TotalScore = 0
     @IBOutlet weak var TotalScoreLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-       
-        generateTile()
-        generateTile()
+        initializeGame()
         var swipeRight = UISwipeGestureRecognizer(target: self, action: "right:")
         swipeRight.numberOfTouchesRequired = 1
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
@@ -142,7 +143,7 @@ class ViewController: UIViewController {
            gameStateLabel.hidden = false
         }
     }
-   
+  
     func isGameOver() -> Bool{
         for score in tiles{
             if score == 0{
@@ -150,6 +151,20 @@ class ViewController: UIViewController {
             }
         }
         return true
+    }
+   
+    func isAddable(){
+        for tile in tiles{
+            
+        }
+    }
+    func initializeGame(){
+        for i in 0..<tiles.count{
+           initializeTile(i)
+        }
+        generateTile()
+        generateTile()
+        gameStateLabel.hidden = true
     }
     
     func isGameClear(score: Int, clearScore: Int = 32) -> Bool{
