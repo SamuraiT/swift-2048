@@ -290,25 +290,15 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
    
-    func calcNextIndex(isRighSide: Bool, next: Int) -> Int{
-        if isRighSide{
-            return next + 1
-        } else {
-            return next - 1
-        }
+    func calcNextIndex(operand: Int, addNum: Int) -> Int{
+        return operand + addNum
     }
     
-    func moveSide(isRightSide: Bool, terminal : [Int]){
+    func moveSide(traverseOrder: [Int], terminal : [Int], addPrev: Int, addNext: Int){
         /*
         generaized version of side move
         */
         var except:[Int] = []
-        var traverseOrder : [Int] = []
-        if isRightSide{
-            traverseOrder = reverse(0...15)
-        } else {
-            traverseOrder = Array(0...15)
-        }
         for i in traverseOrder {
             var score = tiles[i]
             if score == 0 {
@@ -318,10 +308,9 @@ class ViewController: UIViewController {
                 //dont move. stay
             } else {
                 var next = i;
-                var prev = 0
-                prev = calcNextIndex(!isRightSide, next: next)
                 while true{
-                    next = calcNextIndex(isRightSide, next: next);
+                    var prev = calcNextIndex(next, addNum: addPrev)
+                    next = calcNextIndex(next, addNum: addNext);
                     if next >= 0 && next < 16 && !contains(terminal, prev){
                         if tiles[next] == 0{
                             moveTile(prev, nextTile: next)
