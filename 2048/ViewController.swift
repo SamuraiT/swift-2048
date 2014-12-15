@@ -245,7 +245,44 @@ class ViewController: UIViewController {
     
     @objc(up:)
     func moveUp(r: UISwipeGestureRecognizer!){
-       println("up")
+        var except:[Int] = []
+        var terminal = [0, 1, 2, 3]
+        for i in (0...15) {
+            var score = tiles[i]
+            if score == 0 {
+                continue
+            }
+            if contains(terminal, i){
+                //dont move. stay
+            } else {
+                var next = i;
+                while true{
+                    next -= 4
+                    var prev = next + 4
+                    if next >= 0 && !contains(terminal, prev){
+                        if tiles[next] == 0{
+                            moveTile(prev, nextTile: next)
+                        } else if tiles[prev] == tiles[next] && !contains(except, prev){
+                            multipleTile(prev, nextTile: next)
+                            except.append(next)
+                            TotalScore += tiles[next]
+                            TotalScoreLabel.text = "Score: \(TotalScore)"
+                            break
+                        }
+                    } else {
+                        println("break \(next)")
+                        break
+                    }
+                    
+                }
+            }
+            
+        }
+        usleep(9000)
+        generateTile()
+        if isGameOver(){
+            gameStateLabel.hidden = false
+        }
     }
     
     override func didReceiveMemoryWarning() {
