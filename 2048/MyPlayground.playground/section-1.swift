@@ -26,3 +26,9 @@ for (i, score) in enumerate(reverse(tiles)){
 }
 
 reverse(0...15)
+
+func s() -> Bool{
+    return 1 == 2
+}
+
+s()

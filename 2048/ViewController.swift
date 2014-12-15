@@ -63,10 +63,7 @@ class ViewController: UIViewController {
         var except:[Int] = []
         var terminal = [3, 7, 11, 15]
         for (i, score) in enumerate(tiles) {
-            if score == 0 || contains(except, i){
-                if except.count >= 1{
-                except.removeAll(keepCapacity: true)
-                }
+            if score == 0 {
                 continue
             }
             if contains(terminal, i){
@@ -78,7 +75,7 @@ class ViewController: UIViewController {
                     if next < 16 && !contains(terminal, next-1){
                         if tiles[next] == 0{
                             moveTile(next-1, nextTile: next)
-                        } else if tiles[next-1] == tiles[next]{
+                        } else if tiles[next-1] == tiles[next] && !contains(except, next-1){
                             multipleTile(next-1, nextTile: next)
                             except.append(next)
                             TotalScore += tiles[next]
@@ -108,10 +105,7 @@ class ViewController: UIViewController {
         var terminal = [0, 4, 8, 12]
         for i in reverse(0...15) {
             var score = tiles[i]
-            if score == 0 || contains(except, i){
-                if except.count >= 1{
-                except.removeAll(keepCapacity: true)
-                }
+            if score == 0 {
                 continue
             }
             if contains(terminal, i){
@@ -123,7 +117,7 @@ class ViewController: UIViewController {
                     if next >= 0 && !contains(terminal, next+1){
                         if tiles[next] == 0{
                             moveTile(next+1, nextTile: next)
-                        } else if tiles[next+1] == tiles[next]{
+                        } else if tiles[next+1] == tiles[next] && !contains(except, next+1){
                             multipleTile(next+1, nextTile: next)
                             except.append(next)
                             TotalScore += tiles[next]
@@ -155,6 +149,9 @@ class ViewController: UIViewController {
         return true
     }
     
+    func isGameClear(score: Int, clearScore: Int = 32) -> Bool{
+        return score == clearScore
+    }
     func initializeTile(tileNum: Int){
         var tag = view.viewWithTag(tileNum) as UILabel
         tag.text = ""
@@ -178,6 +175,10 @@ class ViewController: UIViewController {
         newTag.text = "\(score)"
         tiles[nextTile] = score
         newTag.backgroundColor = getColor(score)
+        if isGameClear(score){
+            gameStateLabel.text = "Game Clear"
+            gameStateLabel.hidden = false
+        }
     }
     
   
