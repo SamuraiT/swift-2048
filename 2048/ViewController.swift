@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     @IBAction func startNewGame(sender: AnyObject) {
         initializeGame()
     }
+    @IBOutlet weak var highScoreLable: UILabel!
     @IBOutlet weak var gameStateLabel: UILabel!
     var TotalScore = 0
     @IBOutlet weak var TotalScoreLabel: UILabel!
@@ -25,6 +26,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         initializeGame()
+        saveOrShowScore()
         var swipeRight = UISwipeGestureRecognizer(target: self, action: "right:")
         swipeRight.numberOfTouchesRequired = 1
         swipeRight.direction = UISwipeGestureRecognizerDirection.Right
@@ -143,14 +145,31 @@ class ViewController: UIViewController {
            gameStateLabel.hidden = false
         }
     }
-  
+
+    func saveOrShowScore(){
+        let usrProfile = NSUserDefaults.standardUserDefaults()
+        if let score = usrProfile.valueForKey("score"){
+            if TotalScore > score as Int{
+                usrProfile.setValue(TotalScore, forKey: "score")
+                usrProfile.synchronize()
+            }
+        } else {
+            usrProfile.setValue(TotalScore, forKey: "score")
+            usrProfile.synchronize()
+        }
+        var result = usrProfile.stringForKey("score")
+        highScoreLable.text = "High Score: \(result)"
+    }
+    
     func isGameOver() -> Bool{
         for score in tiles{
             if score == 0{
                 return false
             }
         }
+        saveOrShowScore()
         return true
+        
     }
    
     func isAddable(){
@@ -175,6 +194,7 @@ class ViewController: UIViewController {
         tag.text = ""
         tiles[tileNum] = 0
         tag.backgroundColor = UIColor.grayColor()
+        saveOrShowScore()
     }
     
     func moveTile(currentTile: Int, nextTile: Int){
